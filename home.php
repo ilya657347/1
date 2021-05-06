@@ -1,9 +1,10 @@
 <div class="wrap">
-	<h1></h1><br>
+	<h1>Za Warudo!</h1><br>
+  <form action="<?php echo plugins_url(); ?>/tg_bot/oauth.php?redirect=http://wordpress:800/wp-admin/admin.php?page=tg_bot%2Fhome.php">
+    <input type="submit" value="Получить токен гугл календаря">
+  </form>
 	<?php 
-		if($_POST){
-      $data = json_decode($_POST["data"]);
-      foreach ($data["products"] as $key => $value) {
+      //foreach ($data["products"] as $key => $value) {
           /*$start = new WC_Product_Attribute();
           $start->set_id(0);
           $start->set_name("Начало");
@@ -26,9 +27,9 @@
           $koostis = array_shift( wc_get_product_terms( $my_post->$id, 'Начало', array( 'fields' => 'names' ) ) );
           echo $koostis;*/
           //print_r($my_post);
-              }
-    }
-    else{
+             // }
+      session_start();
+      print_r($_SESSION);
 ?>
 <style type="text/css">
   .time_input{
@@ -58,7 +59,7 @@
 $args = array('taxonomy' => 'product_cat');
 $categories = get_categories( $args );
  
-echo "Категория для билетов: <select>";
+echo "Категория для билетов: <select id='cat_selector'>";
 foreach( $categories as $item_cat ) {
   echo "<option value=".$item_cat->term_id.' > '.$item_cat->name.'</ option>';
 }
@@ -105,7 +106,30 @@ foreach( $product as $my_post ){
 echo "</div>";
 ?>
 
-<button>Сохранить</button>
+<button id="save">Сохранить</button>
 <?php
-	 }?>
+	 ?>
+   <script type="text/javascript" src="<?php echo plugins_url() ?>/tg_bot/hide_other_cat.js"></script>
+   <script type="text/javascript">
+     save.addEventListener("click",(event) => {
+      event.preventDefault();
+      let options = {
+        method: "POST",
+
+        body:{ 
+          data: {
+            products: [
+                        {
+                          id: 1,
+                          name: "Имя"}
+                      ]
+                }
+              }
+      }
+      let ajax = fetch("http://wordpress:800/wp-admin/admin.php?page=tg_bot%2Fhome.php");
+      if(ajax.ok){
+        console.log(ajax.json());
+      }
+     });
+   </script>
 </div>
